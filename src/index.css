@@ -3,6 +3,8 @@
   --color-light: #ffe8cc;
   --color-medium: #ffa94d;
   --color-dark: #ff922b;
+  --color-second: #ff6e4d;
+  --color-second-dark: #ff4b2b;
 }
 
 * {
@@ -174,4 +176,15 @@ form h2 {
   font-size: 1.7rem;
   /* text-transform: uppercase; */
   letter-spacing: -0.5px;
+}
+
+form .btn-cancel {
+  grid-column: 1;
+  grid-row: 6;
+
+  background-color: var(--color-second);
+}
+
+form .btn-cancel:hover {
+  background-color: var(--color-second-dark);
 }

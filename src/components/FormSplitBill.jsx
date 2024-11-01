@@ -5,25 +5,38 @@ import { useState } from "react";
 export default function FormSplitBill ({ friend, onChangeBalance })
 {
   const [bill, setBill] = useState(0);
-  const [yourExpenses, setYourExpenses] = useState(0);
-  const [friendExpenses, setFriendExpenses] = useState(0);
-  const [who, setWho] = useState('your');
+  const [userExpenses, setUserExpenses] = useState(0);
+  // const [friendExpenses, setFriendExpenses] = useState(0);
+  const [who, setWho] = useState('select');
 
   function handleOnSubmit (e)
   {
     e.preventDefault();
     let balance;
+    const friendExpenses = bill - userExpenses;
 
-    if (who === 'your') balance = friend.balance + friendExpenses;
-    else if (who === 'friend') balance = friend.balance - yourExpenses;
+    if (who === 'select') return;
+
+    if (who === 'user') balance = friend.balance + friendExpenses;
+    else if (who === 'friend') balance = friend.balance - userExpenses;
     else alert('что-то посчитали не так');
 
     const changeBalance = { ...friend, balance: balance };
     onChangeBalance(changeBalance);
+    clearForm();
+  }
+
+  function handleOnCancel ()
+  {
+    onChangeBalance(undefined);
+    clearForm();
+  }
+
+  function clearForm ()
+  {
     setBill(0);
-    setYourExpenses(0);
-    setFriendExpenses(0);
-    setWho('your');
+    setUserExpenses(0);
+    setWho('user');
   }
 
   return (
@@ -40,24 +53,23 @@ export default function FormSplitBill ({ friend, onChangeBalance })
         onChange={(e) => setBill(Number(e.target.value))}
       />
 
-      <label htmlFor="your-expenses">👱Мои затраты</label>
+      <label htmlFor="user-expenses">👱Мои затраты</label>
       <input
         type="number"
         placeholder="Укажите сумму"
-        name="your-expenses"
-        id="your-expenses"
-        value={yourExpenses}
-        onChange={(e) => setYourExpenses(Number(e.target.value))}
+        name="user-expenses"
+        id="user-expenses"
+        value={userExpenses}
+        onChange={(e) => setUserExpenses(Number(e.target.value))}
       />
 
       <label htmlFor="friend-expenses">🧑‍🤝‍🧑Затратил(а) {friend.name}</label>
       <input
         type="number"
-        placeholder="Укажите сумму"
         name="friend-expenses"
         id="friend-expenses"
-        value={friendExpenses}
-        onChange={(e) => setFriendExpenses(Number(e.target.value))}
+        value={bill - userExpenses}
+        disabled
       />
 
       <label htmlFor="who">❓Кто оплатил счет</label>
@@ -67,11 +79,16 @@ export default function FormSplitBill ({ friend, onChangeBalance })
         value={who}
         onChange={(e) => setWho(e.target.value)}
       >
-        <option value="your">Вы</option>
-        <option value="friend">Друг</option>
+        <option value="select" disabled>Выбери кто платил</option>
+        <option value="user">Вы</option>
+        <option value="friend">{friend.name}</option>
       </select>
 
-      <button className="button">
+      <button type="button" className="button btn-cancel" onClick={handleOnCancel}>
+        Отменить
+      </button>
+
+      <button type="submit" className="button">
         Сделать взаиморасчет
       </button>
     </form>

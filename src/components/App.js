@@ -48,18 +48,18 @@ export default function App ()
 
   function handleChangeBalance (newBalanceWithFriend)
   {
-    if (!newBalanceWithFriend) return;
-
-    setFriends(
-      friends.map((friend) =>
-        friend.id === newBalanceWithFriend.id
-          ? newBalanceWithFriend
-          : friend
-      )
-    );
+    if (newBalanceWithFriend) 
+    {
+      setFriends(
+        friends.map((friend) =>
+          friend.id === newBalanceWithFriend.id
+            ? newBalanceWithFriend
+            : friend
+        )
+      );
+    }
 
     setSelectedFriend({});
-
   }
 
   return (
