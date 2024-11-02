@@ -12,17 +12,23 @@ export default function FormAddFriend ({ onAddFriend })
   {
     e.preventDefault();
 
-    const friend =
+    if (friendName && imgURL)
     {
-      id: Date.now(),
-      name: friendName,
-      image: imgURL,
-      balance: 0
-    };
+      const friend =
+      {
+        id: crypto.randomUUID(),
+        name: friendName,
+        image: imgURL,
+        balance: 0
+      };
+      onAddFriend(friend);
+    }
 
-    onAddFriend(friend);
+
     setFriendName('');
     setImgURL('https://i.pravatar.cc/48?img=');
+
+    e.target.querySelector('#friend-name').focus();
   }
 
   return (

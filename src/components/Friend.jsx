@@ -1,7 +1,13 @@
 //компонент Друг
 
-export default function Friend ({ friend, onSelectFriend })
+export default function Friend ({ friend, selectedFriend, onSelectFriend })
 {
+  const isSelected = (selectedFriend?.id ?? '') === friend.id;
+  function onTaggle ()
+  {
+    const currentSelection = isSelected ? null : friend;
+    onSelectFriend(currentSelection);
+  }
 
   return (
     <li>
@@ -22,9 +28,13 @@ export default function Friend ({ friend, onSelectFriend })
       }
       <button
         className="button"
-        onClick={() => onSelectFriend(friend.id)}
+        onClick={onTaggle}
       >
-        Выбрать
+        {
+          isSelected
+            ? 'Отменить'
+            : ' Выбрать'
+        }
       </button>
     </li>
   );

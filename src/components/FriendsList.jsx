@@ -3,7 +3,7 @@ import Friend from "./Friend";
 
 
 
-export default function FriendsList ({ friends, onSelectFriend })
+export default function FriendsList ({ friends, selectedFriend, onSelectFriend })
 {
   // const friends = initialFriends;
 
@@ -14,6 +14,7 @@ export default function FriendsList ({ friends, onSelectFriend })
           <Friend
             key={friend.id}
             friend={friend}
+            selectedFriend={selectedFriend}
             onSelectFriend={onSelectFriend}
           />)
       }

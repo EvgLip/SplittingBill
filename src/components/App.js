@@ -8,22 +8,29 @@ import FormSplitBill from "./FormSplitBill";
 export default function App ()
 {
   const [friends, setFriends] = useState([]);
-  const [showAddFor, setShowAddFor] = useState(false);
-  const [selectedFriend, setSelectedFriend] = useState({});
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
-  function onAddFriend (friend = {})
+  function hanldeOnAddFriend (friend)
   {
+    if (!friend) return;
+
     setFriends(f => [...f, friend]);
-    setShowAddFor(true);
+    setShowAddForm(false);
   }
 
-  function onSelectFriend (friendId = null)
+  function handleOnSelectFriend (friend = null)
   {
-    const [friend] = friends.filter((frnd) => frnd.id === friendId);
-    setSelectedFriend((f) => friend);
+    setSelectedFriend(friend);
+    //if (!currentFriend)
+    // {
+    //   setSelectedFriend
+    // }
+    //   const [foundFriend] = friends.filter((friend) => frnd.id === currentFriend.id);
+    // setSelectedFriend((f) => foundFriend);
   }
 
-  function handleChangeBalance (newBalanceWithFriend)
+  function handleOnChangeBalance (newBalanceWithFriend)
   {
     if (newBalanceWithFriend) 
     {
@@ -43,21 +50,25 @@ export default function App ()
     <div className="app">
 
       <article className="sidebar">
-        <FriendsList friends={friends} onSelectFriend={onSelectFriend} />
-        {showAddFor && <FormAddFriend onAddFriend={onAddFriend} />}
+        <FriendsList
+          friends={friends}
+          selectedFriend={selectedFriend}
+          onSelectFriend={handleOnSelectFriend}
+        />
+        {showAddForm && <FormAddFriend onAddFriend={hanldeOnAddFriend} />}
         <button
           className="button"
-          onClick={() => setShowAddFor((showAddFor) => !showAddFor)}
+          onClick={() => setShowAddForm((show) => !show)}
         >
-          {showAddFor ? 'Закрыть' : 'Добавить друга'}
+          {showAddForm ? 'Закрыть' : 'Добавить друга'}
         </button>
       </article>
 
       {
-        Object.keys(selectedFriend).length > 0 &&
+        selectedFriend &&
         <FormSplitBill
           friend={selectedFriend}
-          onChangeBalance={handleChangeBalance}
+          onChangeBalance={handleOnChangeBalance}
         />
       }
     </div>

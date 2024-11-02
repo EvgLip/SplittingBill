@@ -15,7 +15,21 @@ export default function FormSplitBill ({ friend, onChangeBalance })
     let balance;
     const friendExpenses = bill - userExpenses;
 
-    if (who === 'select') return;
+    if (who === 'select')
+    {
+      const select = e.target.querySelector('#who');
+      select.style.backgroundColor = '#ffdbd3';
+      select.focus();
+      return;
+    }
+
+    if (bill === 0) 
+    {
+      const select = e.target.querySelector('#bill');
+      select.style.backgroundColor = '#ffdbd3';
+      select.focus();
+      return;
+    }
 
     if (who === 'user') balance = friend.balance + friendExpenses;
     else if (who === 'friend') balance = friend.balance - userExpenses;
@@ -41,7 +55,8 @@ export default function FormSplitBill ({ friend, onChangeBalance })
 
   return (
     <form className="form-split-bill" onSubmit={handleOnSubmit}>
-      <h2>{`Для взаиморасчетов выбран(а) ${friend.name}`}</h2>
+      {/* <h2>{`Для взаиморасчетов выбран(а) ${friend.name}`}</h2> */}
+      <h2>Для взаиморасчетов выбран(а) <span>{friend.name}</span></h2>
 
       <label htmlFor="bill">👛Общий счет</label>
       <input
@@ -50,7 +65,12 @@ export default function FormSplitBill ({ friend, onChangeBalance })
         name="bill"
         id="bill"
         value={bill}
-        onChange={(e) => setBill(Number(e.target.value))}
+        onChange={(e) => 
+        {
+          e.target.style.backgroundColor = "#fff";
+          setBill(Number(e.target.value));
+        }
+        }
       />
 
       <label htmlFor="user-expenses">👱Мои затраты</label>
@@ -77,16 +97,17 @@ export default function FormSplitBill ({ friend, onChangeBalance })
         name="who"
         id="who"
         value={who}
-        onChange={(e) => setWho(e.target.value)}
+        onChange={(e) =>
+        {
+          e.target.style.backgroundColor = "#fff";
+          setWho(e.target.value);
+        }
+        }
       >
         <option value="select" disabled>Выбери кто платил</option>
         <option value="user">Вы</option>
         <option value="friend">{friend.name}</option>
       </select>
-
-      <button type="button" className="button btn-cancel" onClick={handleOnCancel}>
-        Отменить
-      </button>
 
       <button type="submit" className="button">
         Сделать взаиморасчет
