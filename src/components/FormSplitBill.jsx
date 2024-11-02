@@ -2,22 +2,20 @@
 
 import { useState } from "react";
 
-export default function FormSplitBill ({ friend, onChangeBalance })
+export default function FormSplitBill ({ friend, onSplitBill })
 {
   const [bill, setBill] = useState(0);
   const [userExpenses, setUserExpenses] = useState(0);
-  // const [friendExpenses, setFriendExpenses] = useState(0);
-  const [who, setWho] = useState('select');
+  const friendExpenses = bill ? bill - userExpenses : 0;
+  const [whoIsPaying, setPaidByWho] = useState('select');
 
   function handleOnSubmit (e)
   {
     e.preventDefault();
-    let balance;
-    const friendExpenses = bill - userExpenses;
 
-    if (who === 'select')
+    if (whoIsPaying === 'select')
     {
-      const select = e.target.querySelector('#who');
+      const select = e.target.querySelector('#who-is-paying');
       select.style.backgroundColor = '#ffdbd3';
       select.focus();
       return;
@@ -31,26 +29,10 @@ export default function FormSplitBill ({ friend, onChangeBalance })
       return;
     }
 
-    if (who === 'user') balance = friend.balance + friendExpenses;
-    else if (who === 'friend') balance = friend.balance - userExpenses;
-    else alert('что-то посчитали не так');
+    const transferAmount = (whoIsPaying === 'user' ? friendExpenses : -userExpenses);
 
-    const changeBalance = { ...friend, balance: balance };
-    onChangeBalance(changeBalance);
-    clearForm();
-  }
-
-  function handleOnCancel ()
-  {
-    onChangeBalance(undefined);
-    clearForm();
-  }
-
-  function clearForm ()
-  {
-    setBill(0);
-    setUserExpenses(0);
-    setWho('user');
+    // const changeBalance = { ...friend, balance: friend.balance + transferAmount };
+    onSplitBill(transferAmount);
   }
 
   return (
@@ -73,34 +55,39 @@ export default function FormSplitBill ({ friend, onChangeBalance })
         }
       />
 
-      <label htmlFor="user-expenses">👱Мои затраты</label>
+      <label htmlFor="user-expenses">👱Ваши расходы</label>
       <input
         type="number"
         placeholder="Укажите сумму"
         name="user-expenses"
         id="user-expenses"
         value={userExpenses}
-        onChange={(e) => setUserExpenses(Number(e.target.value))}
+        onChange={(e) =>
+          setUserExpenses(Number(e.target.value) <= bill
+            ? Number(e.target.value)
+            : userExpenses
+          )
+        }
       />
 
-      <label htmlFor="friend-expenses">🧑‍🤝‍🧑Затратил(а) {friend.name}</label>
+      <label htmlFor="friend-expenses">🧑‍🤝‍🧑Расходы {friend.name}</label>
       <input
         type="number"
         name="friend-expenses"
         id="friend-expenses"
-        value={bill - userExpenses}
+        value={friendExpenses}
         disabled
       />
 
-      <label htmlFor="who">❓Кто оплатил счет</label>
+      <label htmlFor="who-is-paying">❓Кто оплатил счет</label>
       <select
-        name="who"
-        id="who"
-        value={who}
+        name="who-is-paying"
+        id="who-is-paying"
+        value={whoIsPaying}
         onChange={(e) =>
         {
           e.target.style.backgroundColor = "#fff";
-          setWho(e.target.value);
+          setPaidByWho(e.target.value);
         }
         }
       >

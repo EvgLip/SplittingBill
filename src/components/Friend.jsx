@@ -2,15 +2,10 @@
 
 export default function Friend ({ friend, selectedFriend, onSelectFriend })
 {
-  const isSelected = (selectedFriend?.id ?? '') === friend.id;
-  function onTaggle ()
-  {
-    const currentSelection = isSelected ? null : friend;
-    onSelectFriend(currentSelection);
-  }
+  const isSelected = selectedFriend?.id === friend.id;
 
   return (
-    <li>
+    <li className={isSelected ? 'selected' : ''}>
       <img src={friend.image} alt={friend.name} />
       <h3>{friend.name}</h3>
       {/*ниже три варианта по состоянию поля balance*/}
@@ -28,7 +23,7 @@ export default function Friend ({ friend, selectedFriend, onSelectFriend })
       }
       <button
         className="button"
-        onClick={onTaggle}
+        onClick={() => onSelectFriend(friend)}
       >
         {
           isSelected

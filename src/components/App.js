@@ -19,31 +19,26 @@ export default function App ()
     setShowAddForm(false);
   }
 
-  function handleOnSelectFriend (friend = null)
+  function handleOnSelectFriend (friend)
   {
-    setSelectedFriend(friend);
-    //if (!currentFriend)
-    // {
-    //   setSelectedFriend
-    // }
-    //   const [foundFriend] = friends.filter((friend) => frnd.id === currentFriend.id);
-    // setSelectedFriend((f) => foundFriend);
+    setSelectedFriend(currenFriend => currenFriend?.id === friend.id ? null : friend);
+    setShowAddForm(false);
   }
 
-  function handleOnChangeBalance (newBalanceWithFriend)
+  function handleOnChangeBalance (transferAmount)
   {
-    if (newBalanceWithFriend) 
+    if (transferAmount) 
     {
-      setFriends(
+      setFriends(friends =>
         friends.map((friend) =>
-          friend.id === newBalanceWithFriend.id
-            ? newBalanceWithFriend
+          friend.id === selectedFriend.id
+            ? { ...friend, balance: friend.balance + transferAmount }
             : friend
         )
       );
     }
 
-    setSelectedFriend({});
+    setSelectedFriend(null);
   }
 
   return (
@@ -68,7 +63,7 @@ export default function App ()
         selectedFriend &&
         <FormSplitBill
           friend={selectedFriend}
-          onChangeBalance={handleOnChangeBalance}
+          onSplitBill={handleOnChangeBalance}
         />
       }
     </div>
